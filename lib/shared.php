@@ -1,5 +1,7 @@
 <?php
 
+///http://www.codeforest.net/4-awesome-php-functions-you-must-use-every-time
+
 /** Check if environment is development and display errors **/
 
 function setReporting() {
@@ -49,26 +51,33 @@ function unregisterGlobals() {
 function callHook() {
 	global $url;
 
+    print ($url);
+
 	$urlArray = array();
 	$urlArray = explode("/",$url);
 
 	$controller = $urlArray[0];
 	array_shift($urlArray);
-	$action = $urlArray[0];
-	array_shift($urlArray);
-	$queryString = $urlArray;
-
+    $action = "";
+    $queryString = "";
+    /*
+    if ($urlArray[0]!=NULL) {
+      $action = $urlArray[0];
+      array_shift($urlArray);
+      $queryString = $urlArray;
+    }*/
+    
 	$controllerName = $controller;
 	$controller = ucwords($controller);
 	$model = rtrim($controller, 's');
 	$controller .= 'Controller';
-	$dispatch = new $controller($model,$controllerName,$action);
+	//$dispatch = new $controller($model,$controllerName,$action); //uppercases the controller used to get the dispatch
 
 	if ((int)method_exists($controller, $action)) {
 		call_user_func_array(array($dispatch,$action),$queryString);
 	} else {
 
-      printf("Match for CallHook");
+      printf("No Match for CallHook");
 		/* Error Generation Code Here */
 	}
 }
@@ -87,7 +96,7 @@ function __autoload($className) {
 	}
 }
 
-setReporting();
+//setReporting();
 removeMagicQuotes();
 unregisterGlobals();
 callHook();
